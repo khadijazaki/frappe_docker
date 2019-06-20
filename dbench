@@ -12,6 +12,14 @@ elif [[ "$1" == 'init' ]]; then
     run root "chown -R frappe:frappe /home/frappe"
     run frappe "cd .. && bench init frappe-bench --frappe-branch master --ignore-exist --skip-redis-config-generation && cd frappe-bench"
     run frappe "mv Procfile_docker Procfile && mv sites/common_site_config_docker.json sites/common_site_config.json && bench set-mariadb-host mariadb"
+    run frappe "bench new-site site1.local"
+    read -s -p "Set Administrator Password:" pswd
+    run frappe "bench set-admin-password $pswd"
+    run frappe "bench get-app erpnext https://github.com/frappe/erpnext --branch master"
+    run frappe "bench --site site1.local install-app erpnext"
+    run frappe "wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz"
+    run frappe "tar vxf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz"
+    run frappe "sudo cp wkhtmltox/bin/wk* /usr/bin/"
 elif [[ "$1" == 'setup' ]]; then
     if [[ "$2" == 'docker' ]]; then
         if [[ "$3" == '--swarm-mode' ]]; then
@@ -30,6 +38,12 @@ elif [[ "$1" == 'setup' ]]; then
         result="127.0.0.1 ${a}"
         run root "echo ${result} | tee --append /etc/hosts"
     fi
+elif [ "$1" == 'start' ] && [ "$2" == 'docker' ]; then
+        if [ "$3" == '--swarm-mode' ]; then
+            echo "Docker swarm mode is not currently supported"
+        else
+            docker-compose up -d
+        fi
 elif [[ "$1" == '-c' ]]; then
     shift
     user=$1
