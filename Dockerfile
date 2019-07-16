@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-suggests --no-install-reco
   vim xfonts-75dpi xfonts-base wget wkhtmltopdf \
   && apt-get clean && rm -rf /var/lib/apt/lists/* \
   && pip install --upgrade setuptools pip --no-cache \
+  && pip install pyzk \
   && curl https://deb.nodesource.com/node_10.x/pool/main/n/nodejs/nodejs_10.10.0-1nodesource1_amd64.deb > node.deb \
   && dpkg -i node.deb \
   && rm node.deb \
