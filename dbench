@@ -10,12 +10,12 @@ if [[ $# -eq 0 ]]; then
     docker exec -it frappe bash
 elif [[ "$1" == 'init' ]]; then
     run root "chown -R frappe:frappe /home/frappe"
-    run frappe "cd .. && bench init frappe-bench --frappe-branch master --ignore-exist --skip-redis-config-generation && cd frappe-bench"
+    run frappe "cd .. && bench init frappe-bench --ignore-exist --skip-redis-config-generation && cd frappe-bench"
     run frappe "mv Procfile_docker Procfile && mv sites/common_site_config_docker.json sites/common_site_config.json && bench set-mariadb-host mariadb"
     run frappe "bench new-site site1.local"
     read -s -p "Set Administrator Password:" pswd
     run frappe "bench set-admin-password $pswd"
-    run frappe "bench get-app erpnext https://github.com/frappe/erpnext --branch master"
+    run frappe "bench get-app erpnext https://github.com/frappe/erpnext"
     run frappe "bench --site site1.local install-app erpnext"
     run frappe "wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz"
     run frappe "tar vxf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz"
